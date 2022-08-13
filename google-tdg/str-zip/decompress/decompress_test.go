@@ -41,7 +41,7 @@ func TestDecompress(t *testing.T) {
 	}
 
 	for i := range testCases {
-		r := Decompress_naive(testCases[i].src)
+		r := Decompress_recursive(testCases[i].src)
 		if r != testCases[i].result {
 			t.Errorf("error on test naive %v, expected %s but was %s", i,
 				testCases[i].result, r)

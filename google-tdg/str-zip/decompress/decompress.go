@@ -38,7 +38,7 @@ func parseNumber(s string, start int, end *int) int {
 	panic("string finished")
 }
 
-func Decompress_naive(str string) string {
+func Decompress_recursive(str string) string {
 	var builder strings.Builder
 	for i := 0; i < len(str); {
 		c := str[i]
@@ -49,7 +49,7 @@ func Decompress_naive(str string) string {
 			var openBracket int
 			multiplier := parseNumber(str, i, &openBracket)
 			closeBracket := findCloseBracket(str, openBracket)
-			substr := Decompress_naive(str[openBracket+1 : closeBracket])
+			substr := Decompress_recursive(str[openBracket+1 : closeBracket])
 			builder.WriteString(strings.Repeat(substr, multiplier))
 			i = closeBracket + 1
 		}
@@ -58,13 +58,12 @@ func Decompress_naive(str string) string {
 }
 
 type Zip struct {
-	Repeats     int
-	openBracket int
-	builder     strings.Builder
+	Repeats int
+	builder strings.Builder
 }
 
 func Decompress(str string) string {
-	stack := []Zip{{Repeats: 1}}
+	stack := []Zip{{}}
 	top := 0
 	for i := 0; i < len(str); {
 		c := str[i]
@@ -81,8 +80,7 @@ func Decompress(str string) string {
 		} else {
 			var openBracket int
 			multiplier := parseNumber(str, i, &openBracket)
-			stack = append(stack, Zip{
-				Repeats: multiplier, openBracket: openBracket})
+			stack = append(stack, Zip{Repeats: multiplier})
 			top++
 			i = openBracket + 1
 		}
